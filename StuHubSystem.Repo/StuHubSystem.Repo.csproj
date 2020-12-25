@@ -22,4 +22,8 @@
     <ProjectReference Include="..\StuHubSystem.Core\StuHubSystem.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="EducationSystem\" />
+  </ItemGroup>
+
 </Project>

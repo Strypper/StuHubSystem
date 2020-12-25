@@ -1,19 +1,16 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using StuHubSystem.DataObject.Entities;
+using StuHubSystem.Contract.Interfaces;
 using StuHubSystem.Core.Database;
-using StuHubSystem.Core.Entities.Person;
+using StuHubSystem.Repo.VietNamLocation;
+using StuHubSystem.Contract.Interfaces.SubjectInterfaces.CollegeSubjectInterfaces;
+using StuHubSystem.Repo.Subjects.College;
 
 namespace StuHubSystem
 {
@@ -30,18 +27,17 @@ namespace StuHubSystem
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddDbContextPool<StuHubContext>(options =>
-                                        options.UseSqlServer
-                                       (Configuration.GetConnectionString("DefaultConnection")));
-            services.AddIdentity<UserModel, IdentityRole<int>>(options => {
-                options.Password.RequireDigit = true;
-                options.Password.RequireLowercase = true;
-                options.Password.RequireUppercase = true;
-                //Caution
-                options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequiredLength = 6;
+            services.AddDbContextPool<StuHubContext>(options => options.UseSqlServer(Configuration.GetConnectionString("StuhubContext")));
+            services.AddTransient<ICityRepository, CityRepository>();
+            services.AddTransient<ICollegeSubjectRequestRepository, CollegeSubjectRequestRepository>();
 
-            }).AddEntityFrameworkStores<StuHubContext>().AddDefaultTokenProviders();
+            var mapperConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            IMapper mapper = mapperConfig.CreateMapper();
+            services.AddSingleton(mapper);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
