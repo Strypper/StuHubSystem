@@ -5,10 +5,8 @@ using System.Text;
 
 namespace StuHubSystem.Core.Entities.EducationSystem
 {
-    public class StudyGroup
+    public class StudyGroup : BaseEntity
     {
-        [Key]
-        public int StudyGroupId { get; set; }
         public string StudyGroupName { get; set; }
         public string StudyGroupImageUrl { get; set; }
         public string StudyGroupColor { get; set; }

@@ -1,17 +1,17 @@
-﻿using System;
+﻿using StuHubSystem.Core.Entities;
+using System;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace StuHubSystem.Contract
 {
-    public interface IRepositoryBase<T>
+    public interface IRepositoryBase<T> where T : BaseEntity
     {
-        IQueryable<T> FindAll();
+        IQueryable<T> FindAll(Expression<Func<T, bool>>? predicate = null);
 
-        IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression);
-
-        Task<T> FindByIdAsync(int id);
+        Task<T> FindByIdAsync(int id, CancellationToken cancellationToken);
 
         void Create(T entity);
 
@@ -19,6 +19,6 @@ namespace StuHubSystem.Contract
 
         void Delete(T entity);
 
-        Task SaveChangesAsync();
+        Task SaveChangesAsync(CancellationToken cancellationToken);
     }
 }
